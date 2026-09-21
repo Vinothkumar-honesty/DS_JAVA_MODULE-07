@@ -25,71 +25,95 @@ Developed by: VINOTHKUMAR R
 RegisterNumber:  212224040361
 */
 
-class RemoveNodes {
-    static class Node {
-        int data;
-        Node next;
+import java.util.*;
 
-        Node(int data) {
-            this.data = data;
-            this.next = null;
-        }
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int val) {
+        this.val = val;
     }
+}
 
-    static Node removeElements(Node head, int val) {
-        
-        while (head != null && head.data == val) {
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+
+        // Remove matching nodes from the beginning
+        while (head != null && head.val == val) {
             head = head.next;
         }
 
-        if (head == null) return null;
+        // Remove matching nodes from the remaining list
+        ListNode current = head;
 
-        Node current = head;
-        while (current.next != null) {
-            if (current.next.data == val) {
-                current.next = current.next.next; // Skip node
+        while (current != null && current.next != null) {
+            if (current.next.val == val) {
+                current.next = current.next.next;
             } else {
-                current = current.next; // Move ahead
+                current = current.next;
             }
         }
 
-        return head; // Return new head
+        return head;
+    }
+}
+
+public class Main {
+
+    public static ListNode buildList(int[] arr) {
+        if (arr.length == 0)
+            return null;
+
+        ListNode head = new ListNode(arr[0]);
+        ListNode current = head;
+
+        for (int i = 1; i < arr.length; i++) {
+            current.next = new ListNode(arr[i]);
+            current = current.next;
+        }
+
+        return head;
     }
 
-    static void display(Node head) {
-        Node temp = head;
-        while (temp != null) {
-            System.out.print(temp.data + " ");
-            temp = temp.next;
+    public static String listToString(ListNode head) {
+        List<Integer> result = new ArrayList<>();
+
+        while (head != null) {
+            result.add(head.val);
+            head = head.next;
         }
-        System.out.println();
+
+        return result.toString();
     }
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        Node head = new Node(1);
-        head.next = new Node(2);
-        head.next.next = new Node(6);
-        head.next.next.next = new Node(3);
-        head.next.next.next.next = new Node(6);
-        head.next.next.next.next.next = new Node(4);
+        String input = scanner.nextLine().replaceAll("\\s", "");
 
-        System.out.println("Original Linked List:");
-        display(head);
+        int[] nums = Arrays.stream(input.split(","))
+                           .mapToInt(Integer::parseInt)
+                           .toArray();
 
-        int val = 6;
+        int val = scanner.nextInt();
 
-        head = removeElements(head, val);
+        ListNode head = buildList(nums);
 
-        System.out.println("Linked List after removing value " + val + ":");
-        display(head);
+        Solution solution = new Solution();
+
+        ListNode updated = solution.removeElements(head, val);
+
+        System.out.println(listToString(updated));
+
+        scanner.close();
     }
 }
 ```
 
 ## Output:
 
-<img width="529" height="236" alt="image" src="https://github.com/user-attachments/assets/14c903e1-d685-474d-b618-06c9822ec0ca" />
+<img width="915" height="306" alt="image" src="https://github.com/user-attachments/assets/ea4a945c-3e78-49bd-a8b0-23cd7a03a78c" />
 
 
 ## Result:
