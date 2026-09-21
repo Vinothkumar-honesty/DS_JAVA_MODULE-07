@@ -24,50 +24,55 @@ Developed by: VINOTHKUMAR R
 RegisterNumber:  212224040361
 */
 
-import java.util.Scanner;
+import java.util.*;
 
-class LongestSet {
+public class ArrayNestingMain {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-    public static int longestSetLength(int[] nums) {
+        String input = sc.nextLine().trim();
+        input = input.replace("nums =", "")
+                     .replace("[", "")
+                     .replace("]", "")
+                     .trim();
+
+        String[] parts = input.split(",");
+        int[] nums = new int[parts.length];
+
+        for (int i = 0; i < parts.length; i++) {
+            nums[i] = Integer.parseInt(parts[i].trim());
+        }
+
+        Solution sol = new Solution();
+        int result = sol.arrayNesting(nums);
+
+        System.out.println(result);
+        sc.close();
+    }
+}
+
+class Solution {
+    public int arrayNesting(int[] nums) {
         boolean[] visited = new boolean[nums.length];
         int maxLength = 0;
 
         for (int i = 0; i < nums.length; i++) {
+
             if (!visited[i]) {
-                int count = 0;
                 int current = i;
+                int length = 0;
 
                 while (!visited[current]) {
                     visited[current] = true;
                     current = nums[current];
-                    count++;
+                    length++;
                 }
 
-                maxLength = Math.max(maxLength, count);
+                maxLength = Math.max(maxLength, length);
             }
         }
 
         return maxLength;
-    }
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        System.out.print("Enter the array size: ");
-        int n = sc.nextInt();
-
-        int[] nums = new int[n];
-
-      
-        System.out.println("Enter " + n + " elements:");
-        for (int i = 0; i < n; i++) {
-            nums[i] = sc.nextInt();
-        }
-
-        int result = longestSetLength(nums);
-        System.out.println("Maximum size of S[k] = " + result);
-
-        sc.close();
     }
 }
 
@@ -75,7 +80,8 @@ class LongestSet {
 
 ## Output:
 
-<img width="648" height="331" alt="image" src="https://github.com/user-attachments/assets/ec3863b7-0889-4948-bf67-6b809f2f21c8" />
+<img width="883" height="187" alt="image" src="https://github.com/user-attachments/assets/7fbc52c9-1ee0-4b1b-a54d-29c38eb18482" />
+
 
 
 ## Result:
