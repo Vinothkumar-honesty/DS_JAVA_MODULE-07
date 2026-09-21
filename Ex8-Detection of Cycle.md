@@ -19,62 +19,84 @@ Developed by: VINOTHKUMAR R
 RegisterNumber:  212224040361
 */
 
-class DetectCycle {
+import java.util.*;
 
-    static class Node {
-        int data;
-        Node next;
+public class Solution {
 
-        Node(int data) {
-            this.data = data;
+    static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int val) {
+            this.val = val;
             this.next = null;
         }
     }
 
-    static Node detectCycle(Node head) {
-        if (head == null || head.next == null) 
-            return null;
+    public boolean hasCycle(ListNode head) {
 
-        Node slow = head;
-        Node fast = head;
+        ListNode slow = head;
+        ListNode fast = head;
 
         while (fast != null && fast.next != null) {
-            slow = slow.next;          
-            fast = fast.next.next;     
 
-            if (slow == fast) {        
-                break;
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast) {
+                return true;
             }
         }
 
-        if (fast == null || fast.next == null)
-            return null;
-
-        slow = head;
-        while (slow != fast) {
-            slow = slow.next;
-            fast = fast.next;
-        }
-
-        return slow;   
+        return false;
     }
 
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Solution sol = new Solution();
 
-        Node head = new Node(1);
-        head.next = new Node(2);
-        head.next.next = new Node(3);
-        head.next.next.next = new Node(4);
-        head.next.next.next.next = new Node(5);
+        String headInput = sc.nextLine().trim();
 
-        head.next.next.next.next.next = head.next.next;
+        headInput = headInput.replaceAll("\\[|\\]", "");
 
-        Node cycleStart = detectCycle(head);
+        if (headInput.isEmpty()) {
+            System.out.println("false");
+            return;
+        }
 
-        if (cycleStart != null)
-            System.out.println("Cycle starts at node: " + cycleStart.data);
-        else
-            System.out.println("No cycle detected.");
+        String[] values = headInput.split(",");
+        int[] nums = Arrays.stream(values)
+                           .mapToInt(Integer::parseInt)
+                           .toArray();
+
+        // Build linked list
+        ListNode head = new ListNode(nums[0]);
+        ListNode current = head;
+
+        List<ListNode> nodeList = new ArrayList<>();
+        nodeList.add(head);
+
+        for (int i = 1; i < nums.length; i++) {
+            ListNode node = new ListNode(nums[i]);
+
+            current.next = node;
+            current = node;
+
+            nodeList.add(node);
+        }
+
+        int pos = sc.nextInt();
+
+        // Create cycle
+        if (pos >= 0 && pos < nodeList.size()) {
+            current.next = nodeList.get(pos);
+        }
+
+        boolean result = sol.hasCycle(head);
+
+        System.out.println(result);
+
+        sc.close();
     }
 }
 
@@ -82,7 +104,8 @@ class DetectCycle {
 
 ## Output:
 
-<img width="459" height="153" alt="image" src="https://github.com/user-attachments/assets/956e0d1f-b504-4175-853e-7171cb9ffed0" />
+<img width="910" height="332" alt="image" src="https://github.com/user-attachments/assets/601af71e-706a-47d6-bfcc-ef83f3a78f18" />
+
 
 ## Result:
 The program successfully detects whether a cycle exists in the linked list.
