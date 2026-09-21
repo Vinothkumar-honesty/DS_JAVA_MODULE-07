@@ -4,11 +4,14 @@
 To write a program that detects a cycle in a linked list and returns the node where the cycle begins.
 If there is no cycle, the program should return null without modifying the linked list.
 ## Algorithm
-1. 
-2. 
-3. 
-4.  
-5.   
+
+1. Initialize two pointers, slow and fast, at the head of the linked list.
+2. Move slow one node at a time.
+3. Move fast two nodes at a time.
+4. Continue while fast and fast.next are not null.
+5. If slow and fast meet, a cycle exists.
+6. If fast reaches null, no cycle exists.
+7. Return true for a cycle; otherwise, return false.
 
 ## Program:
 ```
