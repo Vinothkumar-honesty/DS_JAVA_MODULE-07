@@ -28,88 +28,131 @@ RegisterNumber:  212224040361
 
 import java.util.*;
 
+public class NestedIterator implements Iterator<Integer> {
+    private List<Integer> integers = new ArrayList<>();
+    private int position = 0;
+
+    public NestedIterator(List<NestedInteger> nestedList) {
+        flattenList(nestedList);
+    }
+
+    private void flattenList(List<NestedInteger> nestedList) {
+        for (NestedInteger item : nestedList) {
+            if (item.isInteger()) {
+                integers.add(item.getInteger());
+            } else {
+                flattenList(item.getList());
+            }
+        }
+    }
+
+    @Override
+    public Integer next() {
+        return integers.get(position++);
+    }
+
+    @Override
+    public boolean hasNext() {
+        return position < integers.size();
+    }
+
+    public static List<NestedInteger> parse(String s) {
+        Stack<List<NestedInteger>> stack = new Stack<>();
+        List<NestedInteger> curr = new ArrayList<>();
+        int num = 0;
+        boolean hasNum = false;
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (c == '[') {
+                stack.push(curr);
+                curr = new ArrayList<>();
+            } else if (c == ']') {
+                if (hasNum) {
+                    curr.add(new SimpleNestedInteger(num));
+                    hasNum = false;
+                    num = 0;
+                }
+
+                List<NestedInteger> completed = curr;
+                curr = stack.pop();
+                curr.add(new SimpleNestedInteger(completed));
+
+            } else if (c == ',') {
+                if (hasNum) {
+                    curr.add(new SimpleNestedInteger(num));
+                    hasNum = false;
+                    num = 0;
+                }
+
+            } else if (Character.isDigit(c)) {
+                num = num * 10 + (c - '0');
+                hasNum = true;
+            }
+        }
+
+        return curr;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        String input = sc.nextLine();
+
+        List<NestedInteger> nestedList = parse(input);
+
+        NestedIterator iterator = new NestedIterator(nestedList);
+        List<Integer> output = new ArrayList<>();
+
+        while (iterator.hasNext()) {
+            output.add(iterator.next());
+        }
+
+        System.out.println(output);
+    }
+}
+
 interface NestedInteger {
     boolean isInteger();
     Integer getInteger();
     List<NestedInteger> getList();
 }
 
-class NI implements NestedInteger {
+class SimpleNestedInteger implements NestedInteger {
     private Integer value;
     private List<NestedInteger> list;
 
-    NI(Integer value) {
+    public SimpleNestedInteger(Integer value) {
         this.value = value;
         this.list = null;
     }
 
-    NI(List<NestedInteger> list) {
+    public SimpleNestedInteger(List<NestedInteger> list) {
         this.list = list;
         this.value = null;
     }
 
+    @Override
     public boolean isInteger() {
         return value != null;
     }
 
+    @Override
     public Integer getInteger() {
         return value;
     }
 
+    @Override
     public List<NestedInteger> getList() {
         return list;
     }
 }
-
-class NestedIterator implements Iterator<Integer> {
-    private List<Integer> flattenedList = new ArrayList<>();
-    private int index = 0;
-
-    public NestedIterator(List<NestedInteger> nestedList) {
-        flatten(nestedList);
-    }
-
-    private void flatten(List<NestedInteger> nestedList) {
-        for (NestedInteger ni : nestedList) {
-            if (ni.isInteger()) {
-                flattenedList.add(ni.getInteger());
-            } else {
-                flatten(ni.getList());
-            }
-        }
-    }
-
-    public Integer next() {
-        return flattenedList.get(index++);
-    }
-
-    public boolean hasNext() {
-        return index < flattenedList.size();
-    }
-}
-
-public class FlattenNestedList {
-    public static void main(String[] args) {
-        List<NestedInteger> nestedList = new ArrayList<>();
-        nestedList.add(new NI(1));
-        List<NestedInteger> innerList = new ArrayList<>();
-        innerList.add(new NI(2));
-        innerList.add(new NI(3));
-        nestedList.add(new NI(innerList));
-        nestedList.add(new NI(4));
-
-        NestedIterator i = new NestedIterator(nestedList);
-        System.out.print("Flattened list: ");
-        while (i.hasNext()) {
-            System.out.print(i.next() + " ");
-        }
-    }
-} 
 ```
 
 ## Output:
+<img width="916" height="190" alt="image" src="https://github.com/user-attachments/assets/5db62125-073e-4341-9795-bd9dbbfdeb73" />
 
-<img width="465" height="85" alt="image" src="https://github.com/user-attachments/assets/f55d839d-8732-4ab3-ba70-1260ebf318c8" />
 
 
 ## Result:
